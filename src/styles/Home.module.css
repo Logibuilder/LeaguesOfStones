@@ -1,0 +1,11 @@
+.lesCards {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+
+
+ .body{ 
+  background: url(https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Kassadin_0.jpg);
+}

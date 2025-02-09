@@ -1,0 +1,31 @@
+.lesCards {
+  margin-bottom: 2rw;
+
+}
+
+.bodyContainer {
+  position: relative;
+  margin: 0 auto;
+  padding: 0;
+  width: 100vw;
+}
+
+.recuperes {
+
+}
+
+.selectionnes {
+
+}
+
+ .body{ 
+  background: url(https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Kassadin_0.jpg);
+  background-size: cover;
+ margin: 0 auto;
+ padding: 0;
+ width: 100vw;
+}
+
+.h1 {
+  margin: 2vw;
+}
