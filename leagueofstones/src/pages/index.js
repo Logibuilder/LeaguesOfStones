@@ -1,23 +1,40 @@
 import Head from "next/head";
 import ImageDesc from "./components/ImageDesc";
-import styles from "../styles/Home.module.css";
 import { useEffect, useState } from "react";
 import 'bootstrap/dist/css/bootstrap.min.css';
+
 
 export default function Home() {
   const [listesChampions, setlistesChampions] = useState([]);
   const [listesChSelectionnes, setlistesChSelectionnes] = useState([]);
+  const [complet, setComplet] = useState(false);
+  const [valided , setValided] = useState(false);
 
   useEffect(() => {
     getCards();
   }, []);
 
+  useEffect(() => {
+
+  if (listesChSelectionnes.length >=20) {
+    setComplet(true);
+  } else {
+    setComplet(false);
+  }}, [listesChSelectionnes])
+
   const deplacerChampion = (desc) => {
+
     const estDansAllChmpions = listesChampions.some(champi => champi.key === desc.key);
     if (estDansAllChmpions) {
-      setlistesChSelectionnes([...listesChSelectionnes, desc]);
-      setlistesChampions(listesChampions.filter(champi => champi.key !== desc.key));
+      // Vérifier si le nombre de cartes sélectionnées est inférieur à 20
+      if (listesChSelectionnes.length < 20) {
+        setlistesChSelectionnes([...listesChSelectionnes, desc]);
+        setlistesChampions(listesChampions.filter(champi => champi.key !== desc.key));
+      } else {
+        alert("Le nombre maximum de cartes sélectionnées est de 20.");
+      }
     } else {
+      
       setlistesChampions([...listesChampions, desc]);
       setlistesChSelectionnes(listesChSelectionnes.filter(champi => champi.key !== desc.key));
     }
@@ -29,6 +46,8 @@ export default function Home() {
         if (!response.ok) {
           throw new Error("HTTP error " + response.status);
         }
+        // console.log(`Largeur: ${window.screen.width} px, Hauteur: ${window.screen.height} px`);
+
         return response.json();
       })
       .then(data => {
@@ -37,6 +56,18 @@ export default function Home() {
       })
       .catch(error => console.error("Error:", error));
   };
+  //fonction pour valider le deck
+  const validerDeck = () => {
+    console.log(valided);  
+    setValided(true);
+    console.log(valided);  
+  }
+
+  const invaliderDeck = () => {
+    console.log(valided);  
+    setValided(false);
+    console.log(valided);
+  }
 
   return (
     <>
@@ -47,35 +78,42 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <section className={`${styles.bodyContainer} container-fluid p-1 `}>
-        <main className="p-0">
-          <section className="row d-flex ">
-            {/* Colonne des champions récupérés */}
-            <section className={`${styles.recuperes} col-6 border border-dark rounded p-1`}>
-              <h1 className="text-center mb-4">Ici les champions récupérés</h1>
-              <div className="row">
-                {listesChampions.map((card, index) => (
-                  <div key={index} className="col-12 col-lg-3 mb-2">
-                    <ImageDesc desc={card} deplacer={deplacerChampion} />
-                  </div>
-                ))}
-              </div>
-            </section>
+      <section className={` container-fluid  d-flex flex-column justify-content-center align-items-center bg-dark text-white`}>
+        <main className="">
+          { !valided && <section className="row d-flex align-items-start">
+              <h1 className="text-center display-4 mb-4 fw-bold text-light">League of Stones</h1>
+              <section className={`champions col-6 border-end border-secondary pe-4`}>
+                  
+                  <h3 className="text-center display-4 mb-4 fw-bold " >Ici les cartes récupérées</h3>
 
-            {/* Colonne des champions sélectionnés */}
-            <section className={`${styles.selectionnes} col-6 border border-dark rounded p-1`}>
-              <h1 className="text-center mb-4">Ici les cartes sélectionnées</h1>
-              <div className="row">
-                {listesChSelectionnes.map((card, index) => (
-                  <div key={index} className="col-12 col-lg-3 mb-2">
-                    <ImageDesc desc={card} deplacer={deplacerChampion} />
+                  <div className={` row`}>
+                            { listesChampions.map((card, index) => (   <div key={index} className="carte col-12 col-sm-6 col-lg-4  col-xl-3   rounded-5">    <ImageDesc desc={card} deplacer={deplacerChampion} />   </div>    ))}
                   </div>
-                ))}
+
+              </section>
+              
+              <section className={`champions col-6 ps-4`}>
+
+                  <h3 className="text-center display-4 mb-4 fw-bold  ">Ici les cartes sélectionnées</h3> {complet ? <button className="valide" onClick={validerDeck}> Je valide mon dèque</button> : null}
+                  <div className={` row`}>
+                            { listesChSelectionnes.map((card, index) => (   <div key={index} className="carte col-12 col-sm-6 col-lg-4 col-xl-3  rounded-5">    <ImageDesc desc={card} deplacer={deplacerChampion} />    </div>    ))}
+                  </div>
+
+              </section>
+
+          </section>}
+          {valided && <section className={``}>
+          <section className={`champions col-12 ps-4`}>
+            <h3 className="text-center display-4 mb-4 fw-bold  ">Ici les cartes validées</h3>
+              <div className={` row`}>
+                        { listesChSelectionnes.map((card, index) => (   <div key={index} className="carte col-12 col-sm-6 col-lg-4 col-xl-3  rounded-5">    <ImageDesc desc={card} deplacer={() => {}} />    </div>    ))}
               </div>
+              <button className="valide" onClick={invaliderDeck}>Retour aux choix du deck</button>
             </section>
-          </section>
+          </section>}
         </main>
       </section>
+      
     </>
   );
 }

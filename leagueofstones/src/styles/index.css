@@ -1,0 +1,61 @@
+body {
+    background: linear-gradient(to right, #ff7e5f, #feb47b); /* Dégradé orange-rose */
+  }
+  
+
+/* Styles pour les titres */
+h1, h3 {
+    font-family: 'Poppins', sans-serif; /* Une belle police pour améliorer le design */
+    text-align: center;
+    font-weight: bold;
+}
+
+h1 {
+    font-size: 3rem; /* Taille plus grande pour le titre principal */
+    color: #fff; /* Texte en blanc */
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2); /* Effet d'ombre pour mieux ressortir */
+}
+
+h3 {
+    font-size: 2rem;
+    color: #ffeadb; /* Une couleur douce qui va bien avec le fond */
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.carte {
+    box-shadow: 0 6px 6px rgba(0, 0, 0, 0.15);
+    border-radius: 10%;
+    transition: transform 0.2s ease-in-out;
+  }
+  .carte:hover {
+    transform: scale(1.02);
+  }
+  
+
+  .valide {
+    position: fixed; /* Fixe le bouton en bas de l'écran */
+    top: 30vh; /* Positionner le bouton à 30% de la hauteur de l'écran */
+    right: 25%; /* Positionner le bouton à 25% de la largeur de l'écran à partir de la droite */
+    transform: translateX(50%); /* Déplacer le bouton de 50% vers la gauche pour centrer le décalage */
+    background: linear-gradient(135deg, #ff4e50, #ff6a00); /* Dégradé plus vif */
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 50px; /* Bouton rond pour un look moderne */
+    font-size: 1.2rem;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Ombre légère */
+    transition: transform 0.2s ease, background 0.3s ease;
+    z-index: 1000; /* Assure que le bouton soit au-dessus de tous les autres éléments */
+}
+
+.valide:hover {
+    background: linear-gradient(135deg, #ff6a00, #ff4e50); /* Inverser le dégradé au survol */
+    box-shadow: 0 0 0 3px rgba(255, 94, 50, 0.7); /* Ajouter un contour personnalisé au focus */
+}
+
+.valide:focus {
+    outline: none; /* Supprimer le contour de focus par défaut */
+    box-shadow: 0 0 0 3px rgba(255, 126, 95, 0.7); /* Ajouter un contour personnalisé au focus */
+}
