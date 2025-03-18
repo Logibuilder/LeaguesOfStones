@@ -1,0 +1,109 @@
+.body {
+    background: linear-gradient(to right, #ff7e5f, #feb47b); /* Dégradé orange-rose */
+}
+
+/* Styles pour les titres */
+.title {
+    font-family: 'Poppins', sans-serif; /* Une belle police pour améliorer le design */
+    text-align: center;
+    font-weight: bold;
+    font-size: 3rem; /* Taille plus grande pour le titre principal */
+    color: #fff; /* Texte en blanc */
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2); /* Effet d'ombre pour mieux ressortir */
+}
+
+.subtitle {
+    font-family: 'Poppins', sans-serif;
+    font-weight: bold;
+    text-align: center;
+    font-size: 2rem;
+    color: #ffeadb; /* Une couleur douce qui va bien avec le fond */
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+/* Styles pour le formulaire */
+.form {
+    background: rgba(0, 0, 0, 0.7); /* Fond semi-transparent */
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Champ de formulaire */
+.input {
+    background: #fff;
+    border-radius: 5px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    width: 100%;
+    margin-bottom: 15px;
+    font-size: 1.1rem;
+}
+
+/* Bouton de soumission */
+.button {
+    background: linear-gradient(135deg, #ff4e50, #ff6a00); /* Dégradé plus vif */
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 50px; /* Bouton rond pour un look moderne */
+    font-size: 1.2rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: transform 0.2s ease, background 0.3s ease;
+    width: 100%;
+}
+
+.button:hover {
+    background: linear-gradient(135deg, #ff6a00, #ff4e50); /* Inverser le dégradé au survol */
+    box-shadow: 0 0 0 3px rgba(255, 94, 50, 0.7); /* Ajouter un contour personnalisé au focus */
+}
+
+.button:focus {
+    outline: none; /* Supprimer le contour de focus par défaut */
+    box-shadow: 0 0 0 3px rgba(255, 126, 95, 0.7); /* Ajouter un contour personnalisé au focus */
+}
+
+/* Message d'erreur */
+.alert {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+    padding: 10px;
+    border-radius: 5px;
+    font-size: 1rem;
+    text-align: center;
+}
+
+/* Navbar */
+.navbar {
+    background-color: #333;
+}
+
+.navbarContent {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.navbarTitle {
+    font-size: 2rem;
+    color: #fff;
+    margin-right: auto;
+}
+
+.navbarLink {
+    margin: 5px;
+}
+
+.navbarLink a {
+    color: #fff;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 1.1rem;
+}
+
+.navbarLink a:hover {
+    color: #ff4e50;
+}

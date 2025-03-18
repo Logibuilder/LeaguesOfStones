@@ -1,0 +1,29 @@
+.navbar {
+    background-color: #ff7e5f;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: 100%;
+  }
+  
+  .navbarBrand {
+    font-size: 2rem;
+    font-weight: bold;
+    color: white !important;
+  }
+  
+  .navLink {
+    font-weight: 500;
+    color: white !important;
+    transition: color 0.3s ease;
+  }
+  
+  .navLink:hover {
+    color: #feb47b !important;
+  }
+  
+  .togglerIcon {
+    border-color: white;
+  }
+  
+  .menuContainer {
+    justify-content: flex-end;
+  }
