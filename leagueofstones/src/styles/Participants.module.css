@@ -1,0 +1,62 @@
+.conteneur {
+  padding: 20px;
+}
+
+.messageErreur {
+  color: red;
+  font-size: 16px;
+  margin-bottom: 10px;
+}
+
+.boutonDemanderMatch {
+  background: linear-gradient(135deg, #ff7e5f, #feb47b);
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.boutonDemanderMatch:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 5px 15px rgba(255, 126, 95, 0.6);
+}
+
+.texteDemandeEnvoyee {
+  color: green;
+  font-weight: bold;
+  margin-left: 10px;
+}
+
+.liste {
+  list-style: none;
+  padding: 0;
+  margin: 0; /* Pour éviter des espacements indésirables */
+}
+
+.elementListe {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 15px;
+  margin-bottom: 10px;
+  border-radius: 5px;
+  min-height: 60px; /* Assure une hauteur minimale */
+}
+
+.nom {
+  color: white;
+  font-size: 18px;
+}
+
+
+.titreListe {
+  font-size: 1.5rem;
+  margin: 20px 0 10px 0;
+  text-align: center;
+  color: #00c6ff;
+  animation: fadeIn 1s ease-in-out;
+}

@@ -3,9 +3,56 @@
 import Link from "next/link";
 import styles from '../../styles/Menu.module.css'; // Importez le fichier CSS modulaire
 
+import { useEffect, useState } from "react";
+import {logout} from "./Logout";
 
 export default function Menu() {
 
+  const [token, setToken] = useState("");
+  const [message, setMessage] = useState("");
+  const [erreur, setErreur] = useState("")
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      setToken(sessionStorage.getItem("token"));
+    }
+  }, []);
+
+  // Mise à jour automatique du token toutes les 0.5 secondes
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const interval = setInterval(() => {
+        const currentToken = sessionStorage.getItem("token") || "";
+        if (currentToken !== token) {
+          setToken(currentToken);
+        }
+      }, 500); // 0.5 seconde
+
+      return () => clearInterval(interval); // Nettoyage
+    }
+  }, [token]); // Dépendance sur le token pour détecter les changements
+
+
+  useEffect(() => {
+    if (message) {
+      const timer = setTimeout(() => {
+        setMessage("");
+      }, 3000);
+  
+      return () => clearTimeout(timer); // Nettoyage au cas où message change trop vite
+    }
+  }, [message]);
+
+  useEffect(() => {
+    if (erreur) {
+      const timer = setTimeout(() => {
+        setErreur("");
+      }, 3000);
+  
+      return () => clearTimeout(timer);
+    }
+  }, [erreur]);
+  
   return (
     <nav className={`navbar navbar-expand-lg navbar-dark  ${styles.navbar}`}>
       <div className="container-fluid mb-3">
@@ -31,27 +78,41 @@ export default function Menu() {
               </Link>
             </li>
             <li className="nav-item">
-              {
-              sessionStorage.getItem('token')  ? (<Link href="/components/Login" className={`nav-link ${styles.navLink}`} >
-                Jeux
-              </Link>) : 
-              (<Link href="/components/Jeux" className={`nav-link ${styles.navLink}`}>
-                Jeux
-              </Link>)}   {console.log(sessionStorage.getItem('token'))}
+            <Link
+                href={token ? "/components/Deck" : "/components/Login"}
+                className={`nav-link ${styles.navLink}`}
+              >
+                Champions
+              </Link> 
             </li>
             <li className="nav-item">
-              <Link href="/components/Login" className={`nav-link ${styles.navLink}`}>
+              {!token && <Link href="/components/Login" className={`nav-link ${styles.navLink}`}>
                 Se connecter
-              </Link>
+              </Link>}
             </li>
             <li className="nav-item">
-              <Link href="/components/Signin" className={`nav-link ${styles.navLink}`}>
+              {token && (
+                <a onClick={() =>logout(setMessage, setErreur)} className={`nav-link ${styles.navLink}`} style={{ cursor: "pointer" }}>
+                  Se déconnecter
+                </a>
+              )}
+            </li>
+            <li className="nav-item">
+              {!token && <Link href="/components/Signin" className={`nav-link ${styles.navLink}`}>
                 S'inscrire
-              </Link>
+              </Link>}
+            </li>
+            <li className="nav-item">
+              {token && <Link href="/components/Signout" className={`nav-link ${styles.navLink}`}>
+                Se désinscrire
+              </Link>}
             </li>
           </ul>
         </div>
       </div>
+      {/* Affichage des messages */}
+      {message && <p className="text-success mt-2 ms-3">{message}</p>}
+      {erreur && <p className="text-danger mt-2 ms-3">{erreur}</p>}
     </nav>
   );
 }

@@ -107,3 +107,28 @@
 .navbarLink a:hover {
     color: #ff4e50;
 }
+
+
+.afterLogin {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 20px;
+    margin-top: 20px;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+    max-width: 500px;
+    width: 100%;
+    color: white;
+  }
+  
+  .afterLogin p {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+  }
+  
+  .afterLogin a {
+    margin: 0 10px;
+  }
+
+  

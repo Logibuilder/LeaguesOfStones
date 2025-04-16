@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Head from "next/head";
 import Link from "next/link";
 import styles from '../../styles/Login.module.css'; // Import du CSS module
@@ -11,16 +11,44 @@ import Footer from "./Footer";
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
+  const [message, setMessage] = useState("");
+  const [erreur , setErreur] = useState("");
+  const [connected, SetConnected] = useState(false)
+
+
+ useEffect (() => {
+    const timeOut = setTimeout(() => {
+      const token = sessionStorage.getItem("token");
+      if (!(token == null && token == undefined)) {
+        SetConnected(true);
+      }
+    }, 500);
+
+    return () => clearTimeout(timeOut);
+ })
+
+  
+  function AfterLogin() {
+    return (
+      <div className={styles.afterLogin}>
+        <p className="text-success fw-bold">Bienvenue !</p>
+        <div className="d-flex gap-3">
+          <Link href="/" className="btn btn-light">🏠 Accueil</Link>
+          <Link href="./matchmaking" className="btn btn-primary">🎮 Matchmaking</Link>
+          <button  className="btn btn-primary">se déconnecter </button>
+        </div>
+      </div>
+    );
+  }
 
   const soumettreUser = (e) => {
     e.preventDefault();
     if (email && password) {
       // Logique de connexion ici (envoi de la requête à l'API ou autre)
       console.log("Connexion avec:", email, password);
-      setError("");
     } else {
-      setError("Veuillez remplir tous les champs.");
+      setMessage("");
+      setErreur("Veuillez remplir tous les champs.");
     }
     fetch("http://localhost:3001/login", {
         method: "POST",
@@ -32,13 +60,32 @@ export default function Login() {
           password: password
         }),
       })
-        .then((response) => {
+        .then(async (response) => {
+          const text = await response.text();
           if (!response.ok) {
-            throw new Error('Erreur serveur');
+            console.log(response.text);
+            if (text == "Email or password incorrect") {
+              setMessage("");
+              setErreur("Email ou mots de pass incorrect");
+              return ;
+            } else {
+              setMessage("");
+              setErreur("Une erreur est survenue. Veuillez réessayer.")
+              return ;
+            }
+            return null;;
           }
-          return response.json();
+          try {
+            const data = JSON.parse(text);
+            return data;
+          } catch (e) {
+            setMessage("");
+            setErreur("Réponse serveur invalide.");
+            return null;
+          }
         })
         .then((data) => {
+          if (!data) return;
           console.log(data);
           sessionStorage.setItem("email", data.email);
           sessionStorage.setItem("id", data.id);
@@ -46,13 +93,29 @@ export default function Login() {
           sessionStorage.setItem("name", data.name);
 
           console.log("le token est : " + sessionStorage.getItem("token"));
+          setErreur("");
+          setMessage("Connecton réussie !!!");
+          SetConnected(true);
 
         })
         .catch((error) => {
           console.error("Erreur:", error);
-          setError("Une erreur est survenue. Veuillez réessayer.");
+          setMessage("");
+          setErreur("Une erreur est survenue. Veuillez réessayer.");
         });
   };
+
+  useEffect(() => {
+    setTimeout(() => {
+      if (message) {
+        setMessage("");
+      } 
+      if (erreur) {
+        setErreur("");
+      } 
+
+    }, 2000);
+  })
 
   return (
     <>
@@ -65,8 +128,10 @@ export default function Login() {
       <Menu />
       <section className="container-fluid d-flex flex-column justify-content-center align-items-center bg-dark text-white">
         <main className={styles.form}>
-          <h1 className={styles.title}>Se connecter</h1>
-          <form onSubmit={soumettreUser} className={`d-flex flex-column bd-`}>
+          <h1 className={styles.title}>{connected ? "Vous êtes connecté(e)s" : "Se connecter"}</h1>
+          {erreur && <div className="alert alert-danger mt-2">{erreur}</div>}
+          {message && <div className="alert alert-success mt-2">{message}</div>}
+          {!connected && <form onSubmit={soumettreUser} className={`d-flex flex-column bd-`}>
             <div className="mb-3">
               <label htmlFor="email" className="form-label">
                 Adresse e-mail
@@ -93,11 +158,11 @@ export default function Login() {
                 required
               />
             </div>
-            {error && <div className={styles.alert}>{error}</div>}
             <button type="submit" className={styles.button}>
               Se connecter
             </button>
-          </form>
+          </form>}
+          {connected && <AfterLogin /> }
         </main>
       </section>
       <Footer/>
