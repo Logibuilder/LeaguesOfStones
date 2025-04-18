@@ -31,6 +31,7 @@ h3 {
     transform: scale(1.02);
   }
   
+  
 
   .valide {
     position: fixed; /* Fixe le bouton en bas de l'écran */
@@ -59,3 +60,102 @@ h3 {
     outline: none; /* Supprimer le contour de focus par défaut */
     box-shadow: 0 0 0 3px rgba(255, 126, 95, 0.7); /* Ajouter un contour personnalisé au focus */
 }
+
+
+
+.envoi {
+    position: fixed; /* Fixe le bouton en bas de l'écran */
+    top: 30vh; /* Positionner le bouton à 30% de la hauteur de l'écran */
+    right: 50%; /* Positionner le bouton à 25% de la largeur de l'écran à partir de la droite */
+    transform: translateX(50%); /* Déplacer le bouton de 50% vers la gauche pour centrer le décalage */
+    background: linear-gradient(135deg, #ff4e50, #ff6a00); /* Dégradé plus vif */
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 50px; /* Bouton rond pour un look moderne */
+    font-size: 1.2rem;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Ombre légère */
+    transition: transform 0.2s ease, background 0.3s ease;
+    z-index: 1000; /* Assure que le bouton soit au-dessus de tous les autres éléments */
+}
+
+.envoi:hover {
+    background: linear-gradient(135deg, #ff6a00, #ff4e50); /* Inverser le dégradé au survol */
+    box-shadow: 0 0 0 3px rgba(255, 94, 50, 0.7); /* Ajouter un contour personnalisé au focus */
+}
+
+.envoi:focus {
+    outline: none; /* Supprimer le contour de focus par défaut */
+    box-shadow: 0 0 0 3px rgba(255, 126, 95, 0.7); /* Ajouter un contour personnalisé au focus */
+}
+
+.overlay-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    backdrop-filter: blur(6px); /* Ajoute un effet de flou élégant */
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent, pour garder le focus */
+    z-index: 9999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .overlay-box {
+    background: linear-gradient(to right, #ff7e5f, #feb47b); /* Cohérent avec le fond */
+    color: white;
+    font-family: 'Poppins', sans-serif;
+    padding: 2rem;
+    border-radius: 20px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.4);
+    max-width: 500px;
+    width: 90%;
+    text-align: center;
+    animation: fadeIn 0.3s ease-in-out;
+  }
+  
+  .overlay-box h4 {
+    font-size: 1.8rem;
+    margin-bottom: 1.5rem;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+  }
+  
+  .overlay-box button {
+    margin: 0 10px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 30px;
+    font-weight: bold;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: transform 0.2s ease, background 0.3s ease;
+  }
+  
+  .overlay-box button:first-of-type {
+    background: #28a745; /* vert succès */
+    color: white;
+  }
+  
+  .overlay-box button:first-of-type:hover {
+    background: #218838;
+  }
+  
+  .overlay-box button:last-of-type {
+    background: #6c757d; /* gris neutre */
+    color: white;
+  }
+  
+  .overlay-box button:last-of-type:hover {
+    background: #5a6268;
+  }
+  
+  /* Petite animation d'apparition */
+  @keyframes fadeIn {
+    from { opacity: 0; transform: scale(0.95); }
+    to { opacity: 1; transform: scale(1); }
+  }
+  

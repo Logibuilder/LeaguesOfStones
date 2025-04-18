@@ -3,13 +3,106 @@ import ImageDesc from "./ImageDesc";
 import Menu from "./Menu";
 import Footer from "./Footer";
 import { useEffect, useState } from "react";
+import { getMatch, initDeck } from "./initDeck";
+import styles from "../../styles/Deck.module.css"
+import Link from "next/link";
 
 
 export default function Jeux() {
   const [listesChampions, setlistesChampions] = useState([]);
   const [listesChSelectionnes, setlistesChSelectionnes] = useState([]);
+  const [deck, setDeck] = useState([]);
   const [complet, setComplet] = useState(false);
   const [valided , setValided] = useState(false);
+  const [affirmer, setAffirmer] = useState(false);
+  const [message, setMessage] = useState("");
+  const [messageDeck, setMessageDeck] = useState("");
+  const [erreur, setErreur] = useState("");
+  const [status, setStatus] = useState("");
+  const [initDeckSuccess, setInitDeckSucces] = useState(false);
+  const [lanceVerification, setLanceVerification] = useState(false);
+  const [startMatch, setStartMatch] = useState(false);
+  const [waitOpponent, setWaitOpponent] = useState(true);
+
+  const confirmer = () => {
+    setAffirmer(false);
+    getMatch(setMessage, setErreur, setStatus, initDeckSuccess)
+    initDeck(deck, setMessageDeck, setErreur, setInitDeckSucces);
+    console.log(deck);
+    console.log(status);
+    lancerVerification();
+    console.log("la verification de l'état du deck est lancé...")
+  }
+
+  const lancerVerification = () =>  {
+    setLanceVerification(true);
+  }
+
+  const verifierEtatDeck = useCallback(() => {
+    if (!initDeckSuccess && status === "Deck is pending") {
+      initDeck(deck, 
+        (msg) => showMessage('deckMessage', msg),
+        (err) => showMessage('error', err), 
+        setInitDeckSucces
+      );
+    }
+  }, [initDeckSuccess, status, deck]);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (lanceVerification) verifierEtatDeck();
+    }, 3000);
+  
+    return () => clearInterval(interval);
+  }, [lanceVerification, verifierEtatDeck]);
+
+  useEffect(()=> {
+    const interval = setInterval(() => {
+      console.log("touuuur");
+      if (lanceVerification) verifierEtatDeck();
+    }, 3000);
+  
+    // Nettoyage correct avec une fonction anonyme
+    return () => clearInterval(interval);
+  },  [lanceVerification])
+
+
+  useEffect(()=> {
+    const interval = setInterval(()=> {
+      if (initDeckSuccess) {
+        setStartMatch(true);
+        confirmer();
+        if (status.startsWith("Turn")) {
+          setMessage("L'adversaire est prêt(e)");
+        } else if (initDeckSuccess && status === "Deck is pending") {
+            setMessage("En attente de l'initialisation du deck de l'adversaire");
+        } if (status === "Deck is pending") {
+            setMessage("Le match est en attente de deck");
+        } else if (status !== "Deck is pending") {
+            setMessage("Le match n'est pas en attente de deck");
+        }
+
+        console.log("ffffffffffffffffffffffffffffff"); console.log(status);
+        if (status.startsWith("Turn")) {
+          setWaitOpponent(false);
+        }
+      } 
+      }, 3000)
+    return ()=> clearInterval(interval);
+  }, [initDeckSuccess])
+
+  useEffect(()=>{
+    const interval = setInterval(()=> {
+        if (!waitOpponent) {
+          setMessage("L'adversaire est prêt(e)");
+        }
+    }, 3000);
+    return ()=> clearInterval(interval);
+  }, [waitOpponent]);
+
+  const anullerAffirmer = () =>{
+    setAffirmer(false)
+  }
 
   useEffect(() => {
     getCards();
@@ -39,6 +132,7 @@ export default function Jeux() {
       setlistesChampions([...listesChampions, desc]);
       setlistesChSelectionnes(listesChSelectionnes.filter(champi => champi.key !== desc.key));
     }
+    
   };
 
   const getCards = () => {
@@ -62,6 +156,11 @@ export default function Jeux() {
     console.log(valided);  
     setValided(true);
     console.log(valided);  
+    const nouveauDeck = listesChSelectionnes.map(chp => { 
+      console.log(chp.key);
+      return { key : chp.key };
+    });
+    setDeck(nouveauDeck);
   }
 
   const invaliderDeck = () => {
@@ -81,6 +180,10 @@ export default function Jeux() {
       <Menu />
       <section className={` container-fluid  d-flex flex-column justify-content-center align-items-center bg-dark text-white`}>
         <main className="">
+          {erreur && <div className={styles.messageErreur}>{erreur}</div>}
+          {message && <div className={styles.messageSucces}>{message}</div>}
+          {messageDeck && <div className={styles.messageSucces}>{messageDeck}</div>}
+
           { !valided && <section className="row d-flex align-items-start">
               <section className={`champions col-6 border-end border-secondary pe-4`}>
                   
@@ -109,6 +212,32 @@ export default function Jeux() {
                         { listesChSelectionnes.map((card, index) => (   <div key={index} className="carte col-12 col-sm-6 col-lg-4 col-xl-3  rounded-5">    <ImageDesc desc={card} deplacer={() => {}} />    </div>    ))}
               </div>
               <button className="valide" onClick={invaliderDeck}>Retour aux choix du deck</button>
+              <button className="envoi" onClick={()=>{setAffirmer(true)}}>{`         envoyer mon deck          `}</button>
+              {affirmer && (
+              <div className="overlay-container">
+                <div className="overlay-box bg-white text-dark rounded p-4 text-center">
+                  <h4>Souhaitez-vous vraiment envoyer votre deck ?</h4>
+                  <div className="mt-4">
+                    <button className="btn btn-success me-3" onClick={confirmer}>Envoyer le deck</button>
+                    <button className="btn btn-secondary" onClick={anullerAffirmer}>Annuler</button>
+                  </div>
+                </div>
+              </div>
+              )}
+              
+
+              {!waitOpponent || startMatch && (
+              <div className="overlay-container">
+                
+                <div className="overlay-box bg-white text-dark rounded p-4 text-center">
+                {message && <div className={styles.messageSucces}>{message}</div>}
+                  <h4>Prêt(e)s pour le match le match</h4>
+                  <div className="mt-4">
+                    <Link  href="./match"><button className="btn btn-success me-3" onClick={anullerAffirmer}>Aller vers le match</button></Link>
+                  </div>
+                </div>
+              </div>
+              )}
             </section>
           </section>}
         </main>

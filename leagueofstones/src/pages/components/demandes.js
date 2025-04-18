@@ -113,16 +113,17 @@ const Demandes = () => {
 
       {/* ✅ Fenêtre modale si match trouvé */}
       {matchTrouve && (
-        <div className={styles.modalOverlay}>
-            <div className={styles.modalContent}>
-            <h3>🎉 Match trouvé !</h3>
-            <p>Un adversaire vous attend. Préparez votre deck !</p>
-            <Link href="./Deck">
-                <button className={styles.boutonDeck}>Choisir mon deck</button>
-            </Link>
-            </div>
+      <div className={styles.modalOverlay}>
+        <div className={styles.modalContent}>
+          <h3>🎉 Match trouvé !</h3>
+          <p>Un adversaire vous attend. Préparez votre deck !</p>
+          <Link href="./Deck">
+            <button className={styles.boutonDeck}>Choisir mon deck</button>
+          </Link>
         </div>
-        )}
+      </div>
+      )}
+
     </div>
   );
 };
