@@ -38,23 +38,14 @@ export default function Jeux() {
     setLanceVerification(true);
   }
 
-  const verifierEtatDeck = useCallback(() => {
-    if (!initDeckSuccess && status === "Deck is pending") {
-      initDeck(deck, 
-        (msg) => showMessage('deckMessage', msg),
-        (err) => showMessage('error', err), 
-        setInitDeckSucces
-      );
-    }
-  }, [initDeckSuccess, status, deck]);
+  const verifierEtatDeck = () => {
+    if (!initDeckSuccess) {
+      if (status === "Deck is pending") {
+        initDeck(deck, setMessageDeck, setErreur, setInitDeckSucces);
+      }
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      if (lanceVerification) verifierEtatDeck();
-    }, 3000);
-  
-    return () => clearInterval(interval);
-  }, [lanceVerification, verifierEtatDeck]);
+    }
+  }
 
   useEffect(()=> {
     const interval = setInterval(() => {
