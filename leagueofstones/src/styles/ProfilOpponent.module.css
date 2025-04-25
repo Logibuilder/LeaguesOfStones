@@ -1,0 +1,127 @@
+.container {
+  background: linear-gradient(to right, #ff7e5f, #feb47b);
+  height: 100vh;
+  color: white;
+  display: flex;
+  flex-direction: row; /* important ici */
+  justify-content: center;
+  align-items: stretch; /* important pour la hauteur */
+  padding: 20px;
+  text-align: center;
+  border-radius: 20px;
+  gap: 20px; /* pour espacer les colonnes */
+}
+  
+  .profilContainer {
+    max-width: 350px;
+    width: 100%;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 15px;
+    box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.3);
+    padding: 30px 20px;
+  }
+  
+  .playerName {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #ecf0f1;
+  }
+  
+  .h6Style {
+    font-size: 1.2rem;
+    color: #ecf0f1;
+  }
+  
+  .cardInfo {
+    font-size: 1rem;
+    margin-top: 15px;
+  }
+  
+  .cardCount {
+    background-color: rgba(255, 255, 255, 0.4);
+    padding: 10px;
+    border-radius: 10px;
+    font-size: 1.1rem;
+    font-weight: bold;
+  }
+  
+  /* Cylindre Vertical */
+  .hpCylinderContainer {
+    width: 60px;
+    height: 300px;
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 50px;
+    position: relative;
+    margin: 20px 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  /* Ajout des graduations */
+  .graduations {
+    position: absolute;
+    left: 70px;
+    height: 100%;
+    width: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    color: white;
+    font-size: 0.8rem;
+  }
+  
+  .graduation {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 1px;
+    background-color: white;
+  }
+  
+  .graduation1 { bottom: 0%; }
+  .graduation2 { bottom: 20%; }
+  .graduation3 { bottom: 40%; }
+  .graduation4 { bottom: 60%; }
+  .graduation5 { bottom: 80%; }
+  
+  .hpCylinder {
+    width: 100%;
+    position: absolute;
+    bottom: 0;
+    border-radius: 50px;
+    transition: height 0.3s ease-in-out;
+  }
+  
+  .turnIndicator {
+    background-color: #f39c12;
+    padding: 5px 20px;
+    border-radius: 20px;
+    color: black;
+    font-size: 1.2rem;
+    margin-top: 20px;
+  }
+  
+  .hpCylinder span {
+    position: absolute;
+    bottom: 10px;
+    width: 100%;
+    text-align: center;
+    font-weight: bold;
+    font-size: 1rem;
+  }
+  
+  .blue {
+    color: #81c4f7;
+  }
+  
+  .yellow {
+    color: #f4e05d;
+  }
+  
+  .white {
+    color: #ffffff;
+  }
+  
+
+  

@@ -16,80 +16,141 @@ export default function Jeux() {
   const [valided , setValided] = useState(false);
   const [affirmer, setAffirmer] = useState(false);
   const [message, setMessage] = useState("");
-  const [messageDeck, setMessageDeck] = useState("");
   const [erreur, setErreur] = useState("");
-  const [status, setStatus] = useState("");
-  const [initDeckSuccess, setInitDeckSucces] = useState(false);
-  const [lanceVerification, setLanceVerification] = useState(false);
-  const [startMatch, setStartMatch] = useState(false);
-  const [waitOpponent, setWaitOpponent] = useState(true);
+  const [messageDeck, setMessageDeck] = useState("");
+  const [erreurDeck, setErreurDeck] = useState("");
+  const [wait, setWait] = useState(false);
+  const [waitOpponent, setWaitOpponent] = useState(true)
+  const [deckInited, setDeckInited] = useState(false);
 
-  const confirmer = () => {
+  const confirmer = async () => {
     setAffirmer(false);
-    getMatch(setMessage, setErreur, setStatus, initDeckSuccess)
-    initDeck(deck, setMessageDeck, setErreur, setInitDeckSucces);
+    const match = await getMatch();
+    
     console.log(deck);
-    console.log(status);
-    lancerVerification();
-    console.log("la verification de l'état du deck est lancé...")
-  }
-
-  const lancerVerification = () =>  {
-    setLanceVerification(true);
-  }
-
-  const verifierEtatDeck = () => {
-    if (!initDeckSuccess) {
-      if (status === "Deck is pending") {
-        initDeck(deck, setMessageDeck, setErreur, setInitDeckSucces);
+    console.log("fffffffffffffffffffffffffffff")
+    if (match.match) {
+      console.log("1");
+      if  (match.match.status === "Deck is pending") {
+        
+        const res = await initDeck(deck);
+        if (res.inited) {
+          setMessageDeck(res.message);
+          setErreurDeck("");
+          setWait(true);
+          setMessage("En attente de la définition du deck de l'adversaire")
+          setErreur("")
+        } else {
+          setMessage("Votre  deck est attendu")
+          setErreur("")
+          setErreurDeck(res.error)
+          setMessageDeck("");
+          
+          if (res.error == "Un deck est déjà défini pour ce joueur.") {
+            setWait(true);
+          } else {
+            setWait(false);
+          }
+        }
+      }   else if (match.match.status.startsWith("Turn")) {
+            setMessage("L'adversaire vous attends...");
+            setErreur("");
+            setWaitOpponent(false);
+            setWait(true);
       }
+    }
 
+    if (match.err) {
+      console.log("4");
+      setErreur(match.err)
+      setMessage("");
     }
   }
 
-  useEffect(()=> {
-    const interval = setInterval(() => {
-      console.log("touuuur");
-      if (lanceVerification) verifierEtatDeck();
-    }, 3000);
+
+  const verifier = async () => {
+    try {
+
+      const match = await getMatch();
+      
+      // Debug: Afficher l'état actuel
+      console.log("État actuel:", {
+        matchStatus: match.match?.status,
+        erreurDeck,
+        wait,
+        affirmer
+      });
   
-    // Nettoyage correct avec une fonction anonyme
-    return () => clearInterval(interval);
-  },  [lanceVerification])
+      // Si erreur de deck déjà détectée
+      if (erreurDeck === "Un deck est déjà défini pour ce joueur." || message === "L'adversaire vous attends..."  || (match.status && match.status.startsWith("Turn"))) {
 
-
-  useEffect(()=> {
-    const interval = setInterval(()=> {
-      if (initDeckSuccess) {
-        setStartMatch(true);
-        confirmer();
-        if (status.startsWith("Turn")) {
-          setMessage("L'adversaire est prêt(e)");
-        } else if (initDeckSuccess && status === "Deck is pending") {
-            setMessage("En attente de l'initialisation du deck de l'adversaire");
-        } if (status === "Deck is pending") {
-            setMessage("Le match est en attente de deck");
-        } else if (status !== "Deck is pending") {
-            setMessage("Le match n'est pas en attente de deck");
-        }
-
-        console.log("ffffffffffffffffffffffffffffff"); console.log(status);
-        if (status.startsWith("Turn")) {
+        setWait(true);
+        if (message === "L'adversaire vous attends..."  || (match.status && match.status.startsWith("Turn"))) {
           setWaitOpponent(false);
         }
-      } 
-      }, 3000)
-    return ()=> clearInterval(interval);
-  }, [initDeckSuccess])
+        return;
+      }
 
-  useEffect(()=>{
-    const interval = setInterval(()=> {
-        if (!waitOpponent) {
-          setMessage("L'adversaire est prêt(e)");
+      
+  
+      // Si match trouvé
+      if (match.match) {
+        // Si le deck est en attente et qu'on a un deck à envoyer
+        if (match.match.status === "Deck is pending" && deck.length > 0 && !affirmer) {
+          setAffirmer(true); // Active le modal de confirmation
         }
-    }, 3000);
+        // Si le match a commencé
+        else if (match.match.status.startsWith("Turn")) {
+          setMessage("L'adversaire vous attend");
+          setErreur("");
+          setWaitOpponent(false);
+          setWait(true);
+          setAffirmer(false);
+        }
+      }
+  
+      // Gestion des erreurs
+      if (match.err) {
+        setErreur(match.err);
+        setMessage("");
+      }
+    } catch (error) {
+      console.error("Erreur dans verifier:", error);
+      setErreur("Une erreur est survenue lors de la vérification");
+    }
+  };
+  
+  useEffect(() => {
+    // Vérification initiale au chargement
+    const checkInitialStatus = async () => {
+      console.log("Vérification initiale du sessionStorage...");
+      const deckInited = sessionStorage.getItem("deckinited");
+      console.log("Valeur de deckinited:", deckInited);
+      
+      if (deckInited === "true") {
+        setDeckInited(true);
+        console.log("Deck déjà initialisé - activation du modal");
+        setWait(true);
+        
+        // Vérification supplémentaire avec le serveur
+        const match = await getMatch();
+        if (match.match?.status?.startsWith("Turn")) {
+          setMessage("L'adversaire vous attend...");
+          setWaitOpponent(false);
+        } else {
+          setMessage("En attente de l'adversaire...");
+        }
+      }
+    };
+  
+    checkInitialStatus();
+  }, []);
+
+  useEffect (()=> {
+    const interval = setInterval(()=> verifier(), 3000);
     return ()=> clearInterval(interval);
-  }, [waitOpponent]);
+  }, [valided, deck, affirmer, message, messageDeck, erreurDeck, deckInited])
+
 
   const anullerAffirmer = () =>{
     setAffirmer(false)
@@ -101,7 +162,7 @@ export default function Jeux() {
 
   useEffect(() => {
 
-  if (listesChSelectionnes.length >=20) {
+  if (listesChSelectionnes.length >= 20) {
     setComplet(true);
   } else {
     setComplet(false);
@@ -160,6 +221,8 @@ export default function Jeux() {
     console.log(valided);
   }
 
+  
+ 
   return (
     <>
       <Head>
@@ -173,7 +236,9 @@ export default function Jeux() {
         <main className="">
           {erreur && <div className={styles.messageErreur}>{erreur}</div>}
           {message && <div className={styles.messageSucces}>{message}</div>}
+          {erreurDeck && <div className={styles.messageErreur}>{erreurDeck}</div>}
           {messageDeck && <div className={styles.messageSucces}>{messageDeck}</div>}
+
 
           { !valided && <section className="row d-flex align-items-start">
               <section className={`champions col-6 border-end border-secondary pe-4`}>
@@ -209,28 +274,40 @@ export default function Jeux() {
                 <div className="overlay-box bg-white text-dark rounded p-4 text-center">
                   <h4>Souhaitez-vous vraiment envoyer votre deck ?</h4>
                   <div className="mt-4">
-                    <button className="btn btn-success me-3" onClick={confirmer}>Envoyer le deck</button>
+                    <button className="btn btn-success me-3" onClick={() => confirmer()}>Envoyer le deck</button>
                     <button className="btn btn-secondary" onClick={anullerAffirmer}>Annuler</button>
                   </div>
                 </div>
               </div>
               )}
               
-
-              {!waitOpponent || startMatch && (
-              <div className="overlay-container">
-                
-                <div className="overlay-box bg-white text-dark rounded p-4 text-center">
-                {message && <div className={styles.messageSucces}>{message}</div>}
-                  <h4>Prêt(e)s pour le match le match</h4>
-                  <div className="mt-4">
-                    <Link  href="./match"><button className="btn btn-success me-3" onClick={anullerAffirmer}>Aller vers le match</button></Link>
-                  </div>
-                </div>
-              </div>
-              )}
+              
+              
             </section>
           </section>}
+          {wait && (
+              <div className="overlay-container">
+                <div className="overlay-box bg-white text-dark rounded p-4 text-center">
+                  {erreur && <div className={styles.messageErreur}>{erreur}</div>}
+                  {message && <div className={styles.messageSucces}>{message}</div>}
+                  {erreurDeck && <div className={styles.messageErreur}>{erreurDeck}</div>}
+                  {messageDeck && <div className={styles.messageSucces}>{messageDeck}</div>}
+                  
+                  <h4 className="mb-4">Prêt(e) pour le match</h4>
+                  
+                  {waitOpponent ? (
+                    <div className="d-flex align-items-center justify-content-center">
+                      <div className="spinner-border text-primary me-2" role="status"></div>
+                      <span>En attente de l'adversaire...</span>
+                    </div>
+                  ) : (
+                    <Link href="./match" className="btn btn-success">
+                      Commencer le match
+                    </Link>
+                  )}
+                </div>
+              </div>
+            )}
         </main>
       </section>
       <Footer />

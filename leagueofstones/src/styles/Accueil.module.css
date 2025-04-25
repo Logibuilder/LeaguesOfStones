@@ -62,6 +62,7 @@
 .buttonPrimary, .buttonSecondary {
     padding: 12px 24px;
     border: none;
+    text-decoration: none;
     border-radius: 50px;
     font-size: 1rem;
     font-weight: bold;

@@ -1,5 +1,188 @@
+/* Deck.module.css */
+
 .messageErreur {
-    color: red;
-    font-size: 16px;
-    margin-bottom: 10px;
+  color: #ff4e50;
+  font-size: 16px;
+  margin: 10px 0;
+  padding: 8px 12px;
+  background-color: rgba(255, 78, 80, 0.1);
+  border-radius: 4px;
+  border-left: 3px solid #ff4e50;
+}
+
+.messageSucces {
+  color: #28a745;
+  font-size: 16px;
+  margin: 10px 0;
+  padding: 8px 12px;
+  background-color: rgba(40, 167, 69, 0.1);
+  border-radius: 4px;
+  border-left: 3px solid #28a745;
+}
+
+.valide {
+  position: fixed;
+  top: 30vh;
+  right: 25%;
+  transform: translateX(50%);
+  background: linear-gradient(135deg, #ff4e50, #ff6a00);
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 50px;
+  font-size: 1.2rem;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+  z-index: 100;
+}
+
+.valide:hover {
+  background: linear-gradient(135deg, #ff6a00, #ff4e50);
+  transform: translateX(50%) scale(1.05);
+}
+
+.envoi {
+  position: fixed;
+  top: 30vh;
+  right: 50%;
+  transform: translateX(50%);
+  background: linear-gradient(135deg, #4e54c8, #8f94fb);
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 50px;
+  font-size: 1.2rem;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+  z-index: 100;
+}
+
+.envoi:hover {
+  background: linear-gradient(135deg, #8f94fb, #4e54c8);
+  transform: translateX(50%) scale(1.05);
+}
+
+/* Styles pour le modal */
+.overlay-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(5px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.overlay-box {
+  background: linear-gradient(145deg, #2b5876, #4e4376);
+  color: white;
+  padding: 2.5rem;
+  border-radius: 15px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  max-width: 500px;
+  width: 90%;
+  text-align: center;
+  animation: fadeInUp 0.4s ease-out;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
   }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.overlay-box h4 {
+  font-size: 1.8rem;
+  margin-bottom: 1.5rem;
+  color: #fff;
+}
+
+.overlay-box .btn {
+  margin: 0 10px;
+  padding: 10px 25px;
+  border: none;
+  border-radius: 30px;
+  font-weight: bold;
+  transition: all 0.3s ease;
+}
+
+.overlay-box .btn-success {
+  background: #28a745;
+}
+
+.overlay-box .btn-success:hover {
+  background: #218838;
+  transform: translateY(-2px);
+}
+
+.overlay-box .btn-secondary {
+  background: #6c757d;
+}
+
+.overlay-box .btn-secondary:hover {
+  background: #5a6268;
+  transform: translateY(-2px);
+}
+
+/* Styles pour les cartes */
+.carte {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
+  transition: all 0.3s ease;
+  margin-bottom: 1.5rem;
+  padding: 0.8rem;
+  background-color: #2c2c2c;
+  border: 1px solid #444;
+  overflow: hidden;
+}
+
+.carte:hover {
+  transform: scale(1.03);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+}
+
+/* Section champions */
+.champions {
+  background-color: #1c1c1c;
+  border-radius: 15px;
+  margin: 1rem 0;
+  padding: 1.5rem;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Spinner pour l'attente */
+.spinner-border {
+  width: 1.5rem;
+  height: 1.5rem;
+  border-width: 0.2em;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .valide, .envoi {
+    right: 50%;
+    top: auto;
+    bottom: 20px;
+    transform: translateX(50%);
+  }
+  
+  .overlay-box {
+    padding: 1.5rem;
+  }
+}

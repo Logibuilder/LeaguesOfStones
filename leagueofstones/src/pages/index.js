@@ -3,51 +3,58 @@
 import React from "react";
 import Menu from "./components/Menu";
 import Footer from "./components/Footer";
-import styles from '../styles/Accueil.module.css'; // Importez le fichier CSS modulaire
-
-
+import styles from '../styles/Accueil.module.css';
+import Link from "next/link";
 
 const Home = () => {
-  
-  
-  
   return (
-    <section className={`${styles.bodyclass} `}>
-      <Menu /> {/* Intégration du composant Menu */}
-      <main className={`${styles.main}`}>
+    <section className={styles.bodyclass}>
+      <Menu />
+      <main className={styles.main}>
         <section className={styles.container}>
           {/* Titre principal */}
-          <h1 className={styles.title}>Bienvenue sur League of Stones</h1>
+          <h1 className={styles.title}>League of Stones</h1>
 
-          {/* Description */}
+          {/* Slogan */}
           <p className={styles.description}>
-            Créez, gérez et partagez vos decks de champions préférés. Rejoignez une communauté passionnée et devenez un maître du jeu !
+            Le mashup ultime entre stratégie et légendes. Assemblez vos champions et entrez dans l’arène !
           </p>
 
           {/* Boutons d'action */}
           <div className={styles.buttons}>
-            <button className={styles.buttonPrimary}>Commencer</button>
-            <button className={styles.buttonSecondary}>En savoir plus</button>
+            <Link href="./components/Login" className={styles.buttonPrimary} >Jouer maintenant</Link>
           </div>
 
-          {/* Section des fonctionnalités */}
+          {/* Présentation du concept */}
           <div className={styles.features}>
             <div className={styles.feature}>
-              <h2>Créez vos decks</h2>
-              <p>Personnalisez vos decks avec vos champions préférés et optimisez vos stratégies.</p>
+              <h2>Un mashup stratégique</h2>
+              <p>
+                League of Stones combine le système de jeu dynamique de <strong>Hearthstone</strong> avec les champions iconiques de <strong>League of Legends</strong>.
+              </p>
             </div>
             <div className={styles.feature}>
-              <h2>Partagez avec la communauté</h2>
-              <p>Échangez vos decks et découvrez ceux des autres joueurs.</p>
+              <h2>Construisez votre deck</h2>
+              <p>
+                Sélectionnez 20 cartes parmi les champions de LoL, chacun avec ses propres statistiques d'attaque et de défense.
+              </p>
             </div>
             <div className={styles.feature}>
-              <h2>Suivez vos statistiques</h2>
-              <p>Analysez vos performances et améliorez vos compétences.</p>
+              <h2>Affrontez vos adversaires</h2>
+              <p>
+                Jouez tour par tour, posez vos cartes, attaquez stratégiquement et réduisez les PV de l’adversaire à 0 pour gagner.
+              </p>
+            </div>
+            <div className={styles.feature}>
+              <h2>Optimisé pour ordinateur et tablette</h2>
+              <p>
+                Profitez d’une interface fluide et intuitive, conçue spécialement pour les écrans larges : jouez confortablement sur ordinateur ou tablette.
+              </p>
             </div>
           </div>
         </section>
       </main>
-      <Footer /> {/* Intégration du composant Footer */}
+      <Footer />
     </section>
   );
 };
