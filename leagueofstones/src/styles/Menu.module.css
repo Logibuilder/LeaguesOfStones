@@ -1,29 +1,231 @@
+/* Menu.module.css */
+
 .navbar {
-    background-color: #ff7e5f;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    width: 100%;
+  background-color: #ff7e5f;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  position: relative;
+  z-index: 1000;
+}
+
+.navbarBrand {
+  font-size: 2rem;
+  font-weight: bold;
+  color: white !important;
+}
+
+.navLink {
+  font-weight: 500;
+  color: white !important;
+  transition: color 0.3s ease;
+}
+
+.navLink:hover {
+  color: #feb47b !important;
+}
+
+.nameContainer {
+  margin-left: auto;
+  padding-left: 1rem;
+  border-left: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Menu mobile */
+.menuToggle {
+  display: none;
+  cursor: pointer;
+  width: 30px;
+  height: 30px;
+  position: relative;
+  background: transparent;
+  border: none;
+  z-index: 1101;
+}
+
+.menuToggle span {
+  display: block;
+  position: absolute;
+  height: 3px;
+  width: 100%;
+  background: white;
+  border-radius: 3px;
+  left: 0;
+  transition: .25s ease-in-out;
+}
+
+.menuToggle span:nth-child(1) { top: 0; }
+.menuToggle span:nth-child(2),
+.menuToggle span:nth-child(3) { top: 10px; }
+.menuToggle span:nth-child(4) { top: 20px; }
+
+.menuToggle.open span:nth-child(1),
+.menuToggle.open span:nth-child(4) {
+  top: 10px;
+  width: 0%;
+  left: 50%;
+}
+.menuToggle.open span:nth-child(2) { transform: rotate(45deg); }
+.menuToggle.open span:nth-child(3) { transform: rotate(-45deg); }
+
+/* Menu mobile */
+.menuContainer {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 50%;
+  height: 100vh;
+  background-color: #ff7e5f;
+  transform: translateX(100%);
+  transition: transform 0.3s ease-in-out;
+  z-index: 1100;
+  padding: 2rem;
+}
+
+.menuContainer.show {
+  transform: translateX(0);
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 100vw;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 700;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease-in-out;
+}
+
+.overlay.show {
+  opacity: 1;
+  pointer-events: all;
+}
+
+/* Styles responsives */
+
+/* Mobile */
+@media (max-width: 991px) {
+  .menuToggle {
+    display: block;
   }
-  
-  .navbarBrand {
-    font-size: 2rem;
-    font-weight: bold;
-    color: white !important;
+
+  .navbar-nav {
+    flex-direction: column;
+    margin-top: 3rem;
   }
-  
-  .navLink {
-    font-weight: 500;
-    color: white !important;
-    transition: color 0.3s ease;
+
+  .nav-item {
+    margin-bottom: 1.5rem;
   }
-  
-  .navLink:hover {
-    color: #feb47b !important;
-  }
-  
-  .togglerIcon {
-    border-color: white;
-  }
-  
+}
+
+/* Desktop */
+@media (min-width: 992px) {
   .menuContainer {
+    display: flex;
+    flex-grow: 1;
     justify-content: flex-end;
+    position: static;
+    height: auto;
+    width: auto;
+    background: transparent;
+    padding: 0;
+    transform: none !important;
   }
+
+  .navbar-nav {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-left: auto; /* Ceci pousse les liens vers la droite */
+    gap: 1.5rem;
+  }
+
+  .menuToggle {
+    display: none;
+  }
+}
+
+
+.nameContainer {
+  margin-left: auto;
+  padding-left: 1rem;
+  border-left: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.mobileName {
+  padding: 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  margin-bottom: 1rem;
+  display: block; /* Visible par défaut sur mobile */
+}
+
+@media (min-width: 992px) {
+  .mobileName {
+    display: none !important; /* Cache sur desktop */
+  }
+  
+  /* Styles existants pour desktop */
+  .menuContainer {
+    display: flex;
+    flex-grow: 1;
+    justify-content: flex-end;
+    position: static;
+    height: auto;
+    width: auto;
+    background: transparent;
+    padding: 0;
+    transform: none !important;
+  }
+
+  .navbar-nav {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-left: auto;
+    gap: 1.5rem;
+  }
+  
+.nameContainer {
+  margin-left: auto;
+  padding-left: 1rem;
+  border-left: 1px solid rgba(255, 255, 255, 0.2);
+}
+}
+
+/* Styles pour mobile */
+@media (max-width: 991px) {
+  .menuContainer {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 70%;
+    max-width: 300px;
+    height: 100vh;
+    background-color: #ff7e5f;
+    transform: translateX(100%);
+    transition: transform 0.3s ease-in-out;
+    z-index: 1100;
+    padding: 2rem;
+  }
+
+  .menuContainer.show {
+    transform: translateX(0);
+  }
+
+  .navbar-nav {
+    flex-direction: column;
+  }
+
+  .nav-item {
+    margin-bottom: 1rem;
+  }
+  
+.nameContainer {
+  margin-left: auto;
+  padding-left: 1rem;
+  border-left: 1px solid rgba(255, 255, 255, 0.2);
+}
+}

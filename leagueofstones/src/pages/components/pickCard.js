@@ -29,7 +29,7 @@ export const pickCard = async (aPiocher) => {
 
     const data = await reponse.json();
     console.log(data);
-    res.reponse = data.status+ "carte piochée avec succès";
+    res.reponse = "carte piochée avec succès";
     return res;
   } catch (erreur) {
     res.err  = err.message;

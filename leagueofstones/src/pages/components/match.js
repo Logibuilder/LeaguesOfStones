@@ -1,3 +1,4 @@
+'use client'
 import { useEffect, useState } from "react";
 import { getMatch } from "./initDeck";
 import ProfilPlayer from "./profilPlayer";
@@ -11,48 +12,21 @@ import { pickCard } from "./pickCard";
 import { finishMatch } from "./finishMatch";
 import { attack } from "./attack";
 import { attackPlayer } from "./attackPlayer";
+import { logout } from "./Logout";
 
 export default function Match() {
     const [match, setMatch] = useState(null);
     const [erreur, setErreur] = useState(null);
     const [message, setMessage] = useState(null);
-    const [hp1, setHp1] = useState(1);
-    const [hp2, setHp2] = useState(1);
-    const [name1, setName1] = useState("");
-    const [name2, setName2] = useState("");
-    const [FINISHED, SETFINISHED] = useState(false);
+    const [gameOver, setGameOver] = useState({
+        isOver: false ,
+        winner: null,
+        loser: null
+    });
 
 
-    const prepareEndMatch = ()=> {
-         if (match) {
-            setHp1(match.player1.hp);
-            setName1(match.player1.name);
-            setHp2(match.player2.hp);
-            setName2(match.player2.name);
-         }
 
-         if ( hp1 <= 0) {
-            SETFINISHED(true);
-            return { 
-                "end" : true,
-                "winner" : name2,
-                "loser" : name1,
-            } 
-         }  else if (hp2 <= 0) {
-            SETFINISHED(true);
-            return { 
-                "end" : true,
-                "winner" : name1,
-                "loser" : name2,
-            } 
-         } else {
-            return { 
-                "end" : false,
-                "winner" : null,
-                "loser" : null,
-            } 
-         }
-    }
+    
 
     const recupererDonnees = async () => {
             const res = await getMatch();
@@ -62,7 +36,6 @@ export default function Match() {
             } else {
                 setMatch(res.match);
             }
-            prepareEndMatch();
         
     };
 
@@ -79,7 +52,37 @@ export default function Match() {
         return <div className={styles["match-message-error"]}>{erreur}</div>;
     }
 
-    if (!match && FINISHED === false) {
+    // Affiche le popup de fin de match même si match est null
+    if (gameOver.isOver) {
+        return (
+            <div className={styles.gameOverModal}>
+                <div className={styles.modalContent}>
+                    <h2>{gameOver.winner === sessionStorage.getItem("name") 
+                        ? "Félicitations !" 
+                        : "Courage pour la prochaine !"}</h2>
+                    <p>
+                        {gameOver.winner === sessionStorage.getItem("name")
+                            ? `Vous avez battu ${gameOver.loser} !`
+                            : `Vous avez été battu(e) par ${gameOver.winner}.`}
+                    </p>
+                    <div className={styles.modalButtons}>
+                        <button 
+                            className={styles.modalButtonSecondary}
+                            onClick={() => {
+                                logout(setMessage , setErreur);
+                                window.location.href = "./Login"}
+                            }
+                        >
+                            Se déconnecter
+                        </button>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
+
+    if (!match) {
         return <>
             {erreur && <div className={styles["match-message-error"]}>{erreur}</div>}
             {message && <div className={styles["match-message-success"]}>{message}</div>}
@@ -91,15 +94,14 @@ export default function Match() {
     const estJoueur1 = match.player1.name === joueurConnecte;
     
     return estJoueur1 
-        ? <MatchBis player1={match.player1} player2={match.player2} message={message} erreur={erreur} setMessage={setMessage} setErreur={setErreur}/>  
-        : <MatchBis player1={match.player2} player2={match.player1} message={message} erreur={erreur} setMessage={setMessage} setErreur={setErreur}/>;
+        ? <MatchBis player1={match.player1} player2={match.player2} message={message} erreur={erreur} setMessage={setMessage} setErreur={setErreur} setGameOver={setGameOver}/>  
+        : <MatchBis player1={match.player2} player2={match.player1} message={message} erreur={erreur} setMessage={setMessage} setErreur={setErreur} setGameOver={setGameOver}/>;
 }
 
-function MatchBis({ player1, player2, message, erreur, setMessage, setErreur }) {
+function MatchBis({ player1, player2, message, erreur, setMessage, setErreur, setGameOver }) {
     const [card1, setCard1] = useState(null);
     const [card2, setCard2] = useState(null);
     const [finished, setFinished] = useState(false);
-    const [gameOver, setGameOver] = useState(false);
     
 
     useEffect(() => {
@@ -132,14 +134,26 @@ function MatchBis({ player1, player2, message, erreur, setMessage, setErreur }) 
     }
 
     const finirMatch = async () => {
+            // Stocke les infos dans sessionStorage avant que match ne devienne null
+            sessionStorage.setItem('matchWinner', player1.hp > 0 ? player1.name : player2.name);
+            sessionStorage.setItem('matchLoser', player1.hp <= 0 ? player1.name : player2.name);
+
+            // Déterminer le gagnant avant toute chose
+            const winner = player1.hp > 0 ? player1.name : player2.name;
+            const loser = player1.hp <= 0 ? player1.name : player2.name;
+            if (finished) {
+                setGameOver({
+                    isOver: true,
+                    winner: winner,
+                    loser: loser
+                });
+            }
         const res = await finishMatch();
         if (res.err) {
             setErreur(res.err);
         } else {
+                
             setMessage(res.reponse);
-            if (finished) {
-                setGameOver(true);
-            }
         }
     }
 
@@ -163,32 +177,7 @@ function MatchBis({ player1, player2, message, erreur, setMessage, setErreur }) 
 
     return (
         <div className={styles["match-page"]}>
-            {/* Popup de fin de match */}
-            {gameOver && (
-            <div className={styles.gameOverModal}>
-                <div className={styles.modalContent}>
-                <h2>{player1.hp > player2.hp ? "Félicitations !" : "Courage pour la prochaine !"}</h2>
-                <p>
-                    {player1.hp > player2.hp
-                    ? `Vous avez battu ${player2.name} !`
-                    : `Vous avez été battu(e)s par ${player2.name}.`}
-                </p>
-
-                <div className={styles.modalButtons}>
-                    <button 
-                    className={styles.modalButtonPrimary}
-                    >
-                    Nouveau match
-                    </button>
-                    <button 
-                    className={styles.modalButtonSecondary}
-                    >
-                    Se déconnecter
-                    </button>
-                </div>
-                </div>
-            </div>
-            )}
+            
 
 
             
@@ -284,11 +273,13 @@ function MatchBis({ player1, player2, message, erreur, setMessage, setErreur }) 
                         </button>
                         <button
                             onClick={finirMatch}
-                            className={`${styles.buttonStyle} ${finished ? styles.finishedButton : ''}`}
+                            disabled={!finished}
+                            className={`${styles.buttonStyle} ${finished ? styles.finishedButton : ''}  ${!finished ? 'opacity-50 cursor-not-allowed' : ''}`}
                             style={{
                                 backgroundColor: finished ? '#ff0000' : '#ff4444',
                                 border: finished ? '3px solid gold' : 'none',
-                                boxShadow: finished ? '0 0 15px #ff0000, 0 0 30px #ff8800' : '0 2px 5px rgba(0, 0, 0, 0.2)'
+                                boxShadow: finished ? '0 0 15px #ff0000, 0 0 30px #ff8800' : '0 2px 5px rgba(0, 0, 0, 0.2)',
+
                             }}
                         >
                             <span className={finished ? styles.bouncingText : ''}>
