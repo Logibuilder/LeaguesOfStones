@@ -1,5 +1,5 @@
 # League Of Stones - Projet WEB2  
-
+![Match en cours de Logo League of Stones](LOS.png)  
 ## Présentation du projet  
 
 **League Of Stones** est un mashup innovant combinant les mécaniques de jeu de *Hearthstone* (Blizzard™) avec l'univers et les champions de *League of Legends* (Riot Games™).  
