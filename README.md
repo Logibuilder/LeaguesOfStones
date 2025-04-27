@@ -10,6 +10,26 @@
   1. Piocher une carte (1x/tour)  
   2. Poser une carte (max 5 sur le plateau)  
   3. Attaquer (1x/carte/tour)  
+### Prérequis
+- Node.js v16+
+- MongoDB v5+
+- NPM v8+
+
+### Étapes
+bash
+# 1. Cloner le dépôt
+git clone : https://github.com/blandine/League-Of-Stones // le serveur
+git clone : https://github.com/Logibuilder/LeaguesOfStones// le client
+cd league-of-stones
+
+# 2. Installer le backend
+cd League-Of-Stones
+npm install
+npm start  # Lance sur http://localhost:3001
+
+# 3. Installer le frontend
+cd leagueofstones
+npm run dev  # Lance sur http://localhost:3000
 
 ## Fonctionnalités implémentées  
 
@@ -33,11 +53,11 @@
 
 **Frontend:**  
 - React.js (application web responsive)  
-- [Bonus] Version mobile (React Native ou PWA)  
-
 **Backend:**  
 - Web Services REST (fournis)  
 - MongoDB (base de données)  
-- Express.js (serveur)  
+- Express.js (serveur)
+- plus de détail sur [https://github.com/blandine/League-Of-Stones](https://github.com/blandine/League-Of-Stones)
 
 ## Architecture du projet  
+[architecture du projet](architecture_l_o_s.png)
