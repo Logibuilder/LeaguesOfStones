@@ -59,5 +59,13 @@ npm run dev  # Lance sur http://localhost:3000
 - Express.js (serveur)
 - plus de détail sur [https://github.com/blandine/League-Of-Stones](https://github.com/blandine/League-Of-Stones)
 
+
+
+
+
 ## Architecture du projet  
 ![architecture du projet](architecture_l_o_s.png)
+
+
+
+##  PHOTO DE DEMO DANS ![los-demo.pdf](los-demo.pdf) 
